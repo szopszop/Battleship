@@ -84,6 +84,34 @@ def ask_for_ship_orientation():
     else: return False
 
 
+
+def player_1_start_deployment_procedure():
+      print(f'Player 1 deploys ships.')
+
+      print_board()
+
+      # petla rozmieszczania statkow
+      ship_sizes = [2,1]
+      for current_size in ship_sizes: ## dla kazdego z rozmiarow statkow w tablicy ship_sizes
+          move_acceptable=False        ## zaloz ze ruch nie jest dopuszczalny
+          while not move_acceptable:
+               print(f'Select position for a ship of {current_size} size: ')
+               start_position = user_move(current_size)   # pobierz pozycje startowa
+               is_horizontal = ask_for_ship_orientation()        # pobierz orientacje statku
+               move_acceptable = is_move_allowed(start_position,is_horizontal)  # sprawdz czy ruch jest akceptowalny
+               
+               if move_acceptable:
+                    place_ship(start_position, is_horizontal) # zapisz na tablicy
+                    print("Ship placed successfully.")       # wyswietl komunikat
+                    print_board()
+               else:
+                    print("Not possible.")            # poinformuj o bledzie i rozpocznij while od nowa
+
+                    
+def is_move_allowed():
+    return True
+
+
 def game_logic():
     game_board_1 = create_game_board()
     game_board_2 = create_game_board()
