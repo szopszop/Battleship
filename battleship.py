@@ -53,39 +53,47 @@ def place_ship(game_board): # work in progress ~Sebastian
 
 def user_move(game_board: list) -> tuple:
     is_empty_flag = False
-    is_valid_flag = False
+    no_collision_flag = False
 
-    while not (is_valid_flag and is_empty_flag):
+    while not (is_empty_flag and no_collision_flag):
         is_empty_flag = False
-        is_valid_flag = False
-        user_input = get_field_position(height, width)
+        no_collision_flag = False
+
+        position_x, position_y = get_field_position(height, width)
         
-        column = int(ord(user_input[0])-65)
-        row = int(user_input[1:])-1 
         
-        if game_board[row][column] == 0:
+        if game_board_1[position_x][position_y] == 0:
             is_empty_flag = True
+        if game_board_2[position_x][position_y] == 0:
+            is_empty_flag = True  
         else:
-            print('\nYou already picked this field.')
+            print('\nField already taken.')
             continue
 
-        if is_empty_flag and is_valid_flag:
-            return row, column
+        
 
-        # add another flag, that checks for ships coliding"
+
+        if is_empty_flag and no_collision_flag:
+            return position_x, position_y
+
 
 
 def ask_for_ship_orientation():
-    pass
-    return None
+    direction = input("Horizontal or Vertical? [H/W]").upper()
+    while not (direction == 'H' or direction == 'W'):
+        direction = input("Horizontal or Vertical? [H/W]").upper()
+    if direction == 'H': return True
+    else: return False
 
 
 def game_logic():
-    pass
+    game_board_1 = create_game_board()
+    game_board_2 = create_game_board()
+
 
 
 def main():
-    pass
+    game_logic()
 
 
 if __name__ == "__main__":
