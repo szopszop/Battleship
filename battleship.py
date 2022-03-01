@@ -1,5 +1,8 @@
 
 
+from copy import deepcopy
+
+
 height = 5
 width = 5
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -54,8 +57,28 @@ def get_field_position(height, width):
         return row, column
 
 
-def print_board():
-    pass
+def check_valid_position(board, row, column) -> bool:
+    if row >= height or row < 0 or column >= width or column < 0:
+        return True
+    elif board[row][column] == 'X':
+        return False
+    else:
+        return True
+
+
+def place_ship(board): # work in progress, only places 3 size 1 ships ~Sebastian
+    game_board = deepcopy(board)
+    size = 0
+    while size != ship_size:
+        row, column = get_field_position(height, width) 
+        if check_valid_position(game_board, row, column) and check_valid_position(game_board, row-1, column) and check_valid_position(game_board, row+1, column) and check_valid_position(game_board, row, column - 1) and check_valid_position(game_board, row, column + 1):
+            game_board[row][column] = 'X'
+            print_board(game_board)
+            size += 1
+        else:
+            print_board(game_board)
+            print("\nInvalid position! Try some place else")
+    print("Done")
 
 
 def place_ship(game_board): # work in progress ~Sebastian
