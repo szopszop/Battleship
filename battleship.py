@@ -5,15 +5,39 @@ width = 5
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 numbers = '0123456789'
 ship_size = 3
+size = 5
 
 
 def get_difficulty(): # extra
     pass
 
 
-def create_game_board(width, height) -> list:
-    game_board = [[0]* width for i in range(height)]
-    return game_board
+def create_game_board(size) -> list:
+    board = []
+    for i in range(size):
+        board.append(['o'] * size)
+    return board
+
+def print_board(board, size):
+    char = 0
+    i = 1
+    h = []
+    while (i <= size):
+        h.append(str(i))
+        i = i + 1
+    x = ' '.join(h)
+    # print(h)
+    print("")
+    print('        ' + x)
+    print('        ' + '↓ ' * size)
+    print('       ' + '__' * size)
+    for element in board:
+        char += 1
+        element = ' '.join(element)
+        print(chr(char + 64).rjust(2), "→ ", "|", element, "|")
+        print("")
+    print('       ' + '--' * size)
+    return board
 
 
 def get_field_position(height, width):
@@ -108,19 +132,22 @@ def player_1_start_deployment_procedure():
                     print("Not possible.")            # poinformuj o bledzie i rozpocznij while od nowa
 
                     
-def is_move_allowed():
-    return True
+# def is_move_allowed():
+#     return True
 
 
-def game_logic():
-    game_board_1 = create_game_board()
-    game_board_2 = create_game_board()
+# def game_logic():
+#     game_board_1 = create_game_board()
+#     game_board_2 = create_game_board()
 
 
 
-def main():
-    game_logic()
+# def main():
+#     game_logic()
+    
 
 
-if __name__ == "__main__":
-    main()
+# if __name__ == "__main__":
+#     main()
+# create_game_board(size)
+# print_board([["o","o","o","o","o"],["o","o","o","o","o"],["o","o","o","o","o"],["o","o","o","o","o"], ["o","o","o","o","o"]], size)
