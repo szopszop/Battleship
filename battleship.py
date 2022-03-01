@@ -49,9 +49,7 @@ def place_ship(game_board): # work in progress ~Sebastian
         game_board[row][column] = 'X'
 
 
-
-
-def user_move(game_board: list) -> tuple:
+def user_move(game_board_1: list, game_board_2: list) -> tuple:
     is_empty_flag = False
     no_collision_flag = False
 
