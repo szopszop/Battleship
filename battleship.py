@@ -1,3 +1,4 @@
+from cmath import sin
 from copy import deepcopy
 import os, time
 
@@ -5,6 +6,7 @@ height = 5
 width = 5
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 numbers = '0123456789'
+ships = [1, 2, 3]
 
 
 def console_clear():
@@ -44,12 +46,11 @@ def print_board(board):
     print("")
     print('        ' + x)
     print('        ' + '↓ ' * width)
-    print('       ' + '__' * width)
+    print('       ' + '--' * width)
     for element in board:
         char += 1
         element = ' '.join(element)
         print(chr(char + 64).rjust(2), "→ ", "|", element, "|")
-        print("")
     print('       ' + '--' * width)
     return board
 
@@ -87,13 +88,13 @@ def check_valid_position(board, row, column) -> bool:
 
 def check_for_neighbours(board, row, column) -> bool:
     try:
-        if board[row+1][column] == 'X':
+        if board[row+1][column] in ships:
             return False
-        elif board[row-1][column] == 'X':
+        elif board[row-1][column] in ships:
             return False
-        elif board[row][column+1] == 'X':
+        elif board[row][column+1] in ships:
             return False        
-        elif board[row][column-1] == 'X':
+        elif board[row][column-1] in ships:
             return False
         return True
     except IndexError:
@@ -109,7 +110,7 @@ def disallowed_fields(board, row, column):
 
 
 def ask_for_ship_orientation():
-    direction = input("Horizontal or Vertical? [H/W]").upper()
+    direction = input("Horizontal or Vertical? [H/V]").upper()
     while not (direction == 'H' or direction == 'V'):
         direction = input("Horizontal or Vertical? [H/V]").upper()
     if direction == 'H': 
@@ -142,6 +143,7 @@ def validation(game_board) -> tuple:
 def placing_ships(game_board, row, col, ship):
     if ship == 1:
         game_board[row][col] = 'X'
+        return True
 
     if ship > 1:
         if ask_for_ship_orientation():          # True = horizontal
@@ -196,10 +198,71 @@ def placement_phase():
 
     console_clear()
     display_boards(display_board_1, display_board_2)
+    print(game_board_1)
+    print(game_board_2)
+    return game_board_1, game_board_2
+
+
+game_board_A = [['3', 'o', 'o', 'o', '1'], ['3', 'o', 'o', 'o', 'o'], ['3', 'o', 'o', 'o', 'o'], ['o', 'o', '2', '2', 'o'], ['o', 'o', 'o', 'o', 'o']]
+game_board_B = [['o', '2', '2', 'o', '1'], ['o', 'o', 'o', 'o', 'o'], ['o', 'o', 'o', 'o', 'o'], ['o', '3', '3', '3', 'o'], ['o', 'o', 'o', 'o', 'o']]
+
+
+def shooting():
+    display_board_1 = create_game_board(height) 
+    display_board_2 = create_game_board(height)
+    #game_board_A, game_board_A = placement_phase()
+    while True:
+        print('Player_1 move: ')
+        row, col = get_field_position(height, width)
+        if game_board_B[row][col] in ['1', '2', '3']:
+            ship = game_board_B[row][col]
+            game_board_B[row][col] = 'H'
+            display_board_2[row][col] = 'H'
+            if check_if_sunk(game_board_B, ship):
+                sink_ship(display_board_2)
+            print("You've hit a ship!")
+            print(ship)
+        if game_board_B[row][col] == 'o':
+            game_board_B[row][col] = 'M'
+            display_board_2[row][col] = 'M'
+            print('Miss!')
+        display_boards(display_board_1, display_board_2)
+        
+        print('Player_2 move: ')
+        row, col = get_field_position(height, width)
+        if game_board_A[row][col] in ['1', '2', '3']:
+            ship = game_board_A[row][col]
+            game_board_A[row][col] = 'H'
+            display_board_1[row][col] = 'H'
+            if check_if_sunk(game_board_A, ship):
+                sink_ship(display_board_1)
+            print("You've hit a ship!")
+        if game_board_A[row][col] == 'o':
+            game_board_A[row][col] = 'M'
+            display_board_1[row][col] = 'M'
+            print('Miss!')
+        display_boards(display_board_1, display_board_2)
+
+    
+def check_if_sunk(board, ship):
+    sunk = True
+    for line in board:
+        if ship in line:
+            sunk = False
+    return sunk
+
+
+def sink_ship(board):
+    for row in board:
+        for i in range(width):
+            if row[i] == 'H':
+                row[i] = 'S'
 
 
 def main():
-    placement_phase()
+    # game_board_1, game_board_2 = placement_phase()
+    while True:
+        shooting()
 
 
 if __name__ == "__main__":
