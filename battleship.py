@@ -5,8 +5,7 @@ height = 5
 width = 5
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 numbers = '0123456789'
-ship_ship = 3
-ship = 5
+
 
 def console_clear():
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -16,10 +15,10 @@ def get_difficulty(): # extra
     pass
 
 
-def create_game_board(ship) -> list:
+def create_game_board(height) -> list:
     board = []
-    for i in range(ship):
-        board.append(['o'] * ship)
+    for i in range(height):
+        board.append(['o'] * height)
     return board
 
 
@@ -32,21 +31,6 @@ def cover_board(board):
         covered_board.append(covered_row)
     return covered_board
 
-
-# def print_board(board):
-#     column_names = [' ']
-#     for i in range(len(board[0])):
-#         column_names.append(alphabet[i])
-
-#     covered_board = cover_board(board)
-    
-#     print('')
-#     print(' '.join(column_names))
-#     row_number = 1
-#     for row in covered_board:
-#         print(f'{row_number} {" ".join(row)}')
-#         row_number += 1
-#     return covered_board
 
 def print_board(board):
     char = 0
@@ -84,8 +68,8 @@ def get_field_position(height, width):
         print("Incorrect input! (Must be only a letter and a number)")
         return get_field_position(height, width)
     else:
-        row = int(position[1]) - 1
-        column = alphabet.find(position[0].upper())
+        column = int(position[1]) - 1
+        row = alphabet.find(position[0].upper())
         if row >= height or column + 1 > width:
             print("Incorrect input! (Exceeds number of columns or rows)")
             return get_field_position(height, width)
@@ -113,7 +97,15 @@ def check_for_neighbours(board, row, column) -> bool:
             return False
         return True
     except IndexError:
+        return True
         print('index error')
+
+def disallowed_fields(board, row, column):
+    disallowed_fields = []
+
+
+
+
 
 
 def ask_for_ship_orientation():
@@ -123,30 +115,6 @@ def ask_for_ship_orientation():
     if direction == 'H': 
         return False
     return True
-
-
-# def place_ship(board): # work in progress, only places 3 ship 1 ships ~Sebastian
-#     game_board = deepcopy(board)
-#     ships = [2, 1]
-#     for ship in ships:
-#         current_ship = 0
-#         while current_ship != ship:
-#             if ship == 0:
-#                 row, column = get_field_position(height, width) 
-#                 if check_valid_position(game_board, row, column) and check_valid_position(game_board, row-1, column) and check_valid_position(game_board, row+1, column) and check_valid_position(game_board, row, column - 1) and check_valid_position(game_board, row, column + 1):
-#                     game_board[row][column] = 'X'
-#                     print_board(game_board)
-#                     current_ship += 1
-#                 else:
-#                     print_board(game_board)
-#                     print("\nInvalid position! Try some place else")
-#             else:
-#                 orientation = ask_for_ship_orientation(ship)
-#                 print("This will be the part of the ship closest to top-left corner: ")
-#                 row, column = get_field_position(height, width) 
-#                 if orientation:
-#                     pass
-#     print("\nDone placing.")
 
 
 def validation(game_board) -> tuple:
@@ -170,23 +138,28 @@ def validation(game_board) -> tuple:
         if valid_flag and neighbours_flag:
             return row, col
 
+
 def placing_ships(game_board, row, col, ship):
     if ship == 1:
         game_board[row][col] = 'X'
-        print_board(game_board)
 
     if ship > 1:
         if ask_for_ship_orientation():          # True = horizontal
             for i in range(ship):
-                game_board[row+i][col] = 'X'
+                if row >= width: 
+                    game_board[row+i][col] = 'X'
+                else:
+                    break
         else:                                   # False = vertical
             for i in range(ship):
-                game_board[row][col+i] = 'X'
-
+                if row >= height: 
+                    game_board[row][col+i] = 'X'
+                else:
+                    break
                 
 def game_setup() -> list:
-    game_board_1 = create_game_board(ship)
-    game_board_2 = create_game_board(ship)
+    game_board_1 = create_game_board(height)
+    game_board_2 = create_game_board(height)
     display_board_1 = deepcopy(game_board_1)
     display_board_2 = deepcopy(game_board_2)
     return game_board_1, game_board_2, display_board_1, display_board_2
