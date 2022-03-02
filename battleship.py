@@ -110,8 +110,8 @@ def disallowed_fields(board, row, column):
 
 def ask_for_ship_orientation():
     direction = input("Horizontal or Vertical? [H/W]").upper()
-    while not (direction == 'H' or direction == 'W'):
-        direction = input("Horizontal or Vertical? [H/W]").upper()
+    while not (direction == 'H' or direction == 'V'):
+        direction = input("Horizontal or Vertical? [H/V]").upper()
     if direction == 'H': 
         return False
     return True
@@ -147,15 +147,19 @@ def placing_ships(game_board, row, col, ship):
         if ask_for_ship_orientation():          # True = horizontal
             for i in range(ship):
                 if row >= width: 
-                    game_board[row+i][col] = 'X'
+                    return False
+                    
                 else:
-                    break
+                    game_board[row+i][col] = 'X'
+            return True
         else:                                   # False = vertical
             for i in range(ship):
                 if row >= height: 
-                    game_board[row][col+i] = 'X'
+                    return False
                 else:
-                    break
+                    game_board[row][col+i] = 'X'
+            return True      
+
                 
 def game_setup() -> list:
     game_board_1 = create_game_board(height)
@@ -176,14 +180,18 @@ def placement_phase():
     for ship in ships:
         print(f'Choose place for a ship of size {ship}.')
         row, col = validation(game_board_1)
-        placing_ships(game_board_1, row, col, ship)
+        while not placing_ships(game_board_1, row, col, ship):
+            print("Your ship doesn't fit. Try again.")
+            row, col = validation(game_board_1)
         print_board(game_board_1)
     # Player_2
     print('\nPlayer 2 turn.\n')
     for ship in ships:
         print(f'Choose place for a ship of size {ship}.')
         row, col = validation(game_board_2)
-        placing_ships(game_board_2, row, col, ship)
+        while not placing_ships(game_board_2, row, col, ship):
+            print("Your ship doesn't fit. Try again.")
+            row, col = validation(game_board_2)
         print_board(game_board_2)
 
     console_clear()
