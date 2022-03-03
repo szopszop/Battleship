@@ -17,21 +17,11 @@ def get_difficulty(): # extra
     pass
 
 
-def create_game_board(height) -> list:
+def create_board(height) -> list:
     board = []
     for i in range(height):
         board.append(['o'] * height)
     return board
-
-
-def cover_board(board):
-    covered_board = []
-    for row in board:
-        covered_row = []
-        for l in row:
-            covered_row.append(str(l))
-        covered_board.append(covered_row)
-    return covered_board
 
 
 def print_board(board):
@@ -46,21 +36,38 @@ def print_board(board):
     print("")
     print('        ' + x)
     print('        ' + '↓ ' * width)
-    print('       ' + '--' * width)
+    print('     ' + '--' * width+'-')
     for element in board:
         char += 1
         element = ' '.join(element)
         print(chr(char + 64).rjust(2), "→ ", "|", element, "|")
-    print('       ' + '--' * width)
+    print('     ' + '--' * width+'-')
     return board
 
 
-def display_boards(display_board_1, display_board_2):
-    print('\nPlayer 1       Player 2')
-    print('  1 2 3 4 5      1 2 3 4 5')
-    for i in range(len(display_board_1)):
-        print(chr(65+i)+ ' '+' '. join(display_board_1[i])+'    '+chr(65+i)+ ' '+' '. join(display_board_2[i]))
-    print()
+# def print_board(display_board_1, display_board_2):
+#     print('\nPlayer 1       Player 2')
+#     print('  1 2 3 4 5      1 2 3 4 5')
+#     for i in range(len(display_board_1)):
+#         print(chr(65+i)+ ' '+' '. join(display_board_1[i])+'    '+chr(65+i)+ ' '+' '. join(display_board_2[i]))
+#     print()
+def print_both_boards(game_board_1, game_board_2):
+    char = 0
+    i = 1
+    num_arr = []
+    while (i <= height):
+        num_arr.append(str(i))
+        i = i + 1
+    numbers_str = ' '.join(num_arr)
+    # print(num_arr)
+    print("\n Player_1             Player_2")
+    print('      ' + numbers_str + '           ' + numbers_str)
+    print('      ' + '↓ ' * width + '          ' + '↓ ' * width)
+    print('     ' + '--' * width+'-'+ '         ' + '--' * width+'-')
+    for i in range(len(game_board_1)):
+        char += 1
+        print(chr(char + 64).rjust(2), "→ "+ "|"+ ' '. join(game_board_1[i])+ "|     "+ chr(char + 64).rjust(2)+ "→ "+ "|"+ ' '. join(game_board_2[i])+ "|")
+    print('     ' + '--' * width+'-'+ '         ' + '--' * width+'-')
 
 
 def get_field_position(height, width):
@@ -103,9 +110,6 @@ def check_for_neighbours(board, row, column) -> bool:
 
 def disallowed_fields(board, row, column):
     disallowed_fields = []
-
-
-
 
 
 
@@ -164,8 +168,8 @@ def placing_ships(game_board, row, col, ship):
 
                 
 def game_setup() -> list:
-    game_board_1 = create_game_board(height)
-    game_board_2 = create_game_board(height)
+    game_board_1 = create_board(height)
+    game_board_2 = create_board(height)
     display_board_1 = deepcopy(game_board_1)
     display_board_2 = deepcopy(game_board_2)
     return game_board_1, game_board_2, display_board_1, display_board_2
@@ -197,7 +201,7 @@ def placement_phase():
         print_board(game_board_2)
 
     console_clear()
-    display_boards(display_board_1, display_board_2)
+    print_both_boards(display_board_1, display_board_2)
     print(game_board_1)
     print(game_board_2)
     return game_board_1, game_board_2
@@ -208,8 +212,8 @@ game_board_B = [['o', '2', '2', 'o', '1'], ['o', 'o', 'o', 'o', 'o'], ['o', 'o',
 
 
 def shooting():
-    display_board_1 = create_game_board(height) 
-    display_board_2 = create_game_board(height)
+    display_board_1 = create_board(height) 
+    display_board_2 = create_board(height)
     #game_board_A, game_board_A = placement_phase()
     while True:
         print('Player_1 move: ')
@@ -226,7 +230,7 @@ def shooting():
             game_board_B[row][col] = 'M'
             display_board_2[row][col] = 'M'
             print('Miss!')
-        display_boards(display_board_1, display_board_2)
+        print_both_boards(display_board_1, display_board_2)
         
         print('Player_2 move: ')
         row, col = get_field_position(height, width)
@@ -241,7 +245,7 @@ def shooting():
             game_board_A[row][col] = 'M'
             display_board_1[row][col] = 'M'
             print('Miss!')
-        display_boards(display_board_1, display_board_2)
+        print_both_boards(display_board_1, display_board_2)
 
     
 def check_if_sunk(board, ship):
