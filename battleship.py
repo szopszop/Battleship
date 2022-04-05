@@ -1,6 +1,4 @@
-from copy import deepcopy
-import os, time
-import random
+import os, time, random
 
 size = 5
 alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
@@ -11,7 +9,7 @@ def console_clear():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def get_difficulty(): # extra
+def get_difficulty(): #TODO
     pass
 
 
@@ -20,6 +18,7 @@ def create_board(size) -> list:
     for i in range(size):
         board.append(['o'] * size)
     return board
+    
 
 
 def print_board(board):
@@ -80,7 +79,6 @@ def check_valid_position(board, row, column) -> bool:
         return True
     elif board[row][column] in [str(ship) for ship in ships]: 
         return False
-    
     return True
 
 
@@ -317,12 +315,20 @@ def sink_ship(board):
                 row[i] = 'S'
 
 
-
+def choose_level():
+    global size
+    sizes = [5,6,7,8,9,10]
+    user_input = input("Choose the size of the game board you want to play. (5-10)\n: ")
+    while int(user_input) not in sizes:
+        user_input = input("Choose the size of the game board you want to play. (5-10)\n: ")
+    size = int(user_input)
 
 
 def main():
     print('\nWelcome to the Battleship game! ')
     limit = ask_for_turn_limit()
+    choose_level()
+    # choose_ships()
     game_board_1, game_board_2 = placement_phase()
     who_won = shooting(game_board_1, game_board_2, limit)
     if who_won == 'Timeout':
